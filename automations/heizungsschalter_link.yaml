@@ -1,11 +1,8 @@
 blueprint:
-  name: Link On/Off State of Multiple Devices
+  name: Automate Heizungshauptschalter
   description: |
     ## Link On/Off State of Multiple Devices v1.0.1
-
-    Select multiple entities to link their on/off state.  If any selected entity is turned on or off, the other selected entities will be sent a matching on or off command.
-
-    You can select any entity, but only entities supported by the `homeassistant.turn_on` or `homeassistant.turn_off` service calls will work.
+    Sync Schedule with Heizungshauptschalter
 
     ### Requirements
     * All selected entities MUST suport `homeassistant.turn_on` and `homeassistant.turn_off` or errors will be logged and the blueprint will not work.
