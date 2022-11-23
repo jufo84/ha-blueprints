@@ -1,43 +1,30 @@
 blueprint:
-  name: Automate Heizungshauptschalter
-  description: |
-    ## Automate Heizungshauptschalter v1.0.1
-    Sync Schedule with Heizungshauptschalter
-
-    ### Requirements
-    * All selected entities MUST suport `homeassistant.turn_on` and `homeassistant.turn_off` or errors will be logged and the blueprint will not work.
-    * Requires Home Assistant 2022.5.0 or newer.
-    
-    ### Credits
+  name: Heizungshauptschalter Schedule
+  description: 'Heizungshauptschalter zeitbasiert an und aus schalten'
   domain: automation
-  homeassistant:
-    min_version: 2022.5.0
   input:
-    linked_entities:
-      name: Entities to link
+    entity_Heizungshauptschalter:
+      name: Entity für Heizungshauptschalter
       selector:
         entity:
-          multiple: true
-
+    entity_schedule:
+      name: Schedule
+      selector:
+        entity:
 mode: restart
 max_exceeded: silent
-
 variables:
-  linked_entities: !input 'linked_entities'
-
+  entity_Heizungshauptschalter: !input 'entity_Heizungshauptschalter'
+  entity_schedule: !input 'entity_schedule'
 trigger:
-- platform: state
-  entity_id: !input 'linked_entities'
-
+  - platform: state
+    entity_id: !input 'entity_Heizungshauptschalter'
+  - platform: state
+    entity_id: !input 'entity_schedule'
 condition:
-- condition: template
-  value_template: '{{ trigger.to_state.state != trigger.from_state.state }}'
-- condition: template
-  value_template: '{{ (trigger.to_state.state == "on") or (trigger.to_state.state == "off") }}'
-- condition: template
-  value_template: '{{trigger.to_state.context.parent_id is none or (trigger.to_state.context.id != this.context.id and trigger.to_state.context.parent_id != this.context.id) }}'
-
+  - condition: template
+    value_template: '{{ states(entity_Heizungshauptschalter) != states(entity_schedule) }}'
 action:
-- service: homeassistant.turn_{{ trigger.to_state.state }}
-  target:
-    entity_id: '{{ expand(linked_entities) | selectattr("entity_id", "!=", trigger.entity_id) | map(attribute="entity_id") | list }}'
+  - service: homeassistant.turn_{{ trigger.to_state.state }}
+    data:
+      entity_id: '{% if trigger.from_state.entity_id == entity_Heizungshauptschalter %} {{ entity_schedule }} {% else %} {{ entity_Heizungshauptschalter }} {% endif %}'
