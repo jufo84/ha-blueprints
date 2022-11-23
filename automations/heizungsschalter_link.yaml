@@ -3,28 +3,39 @@ blueprint:
   description: 'Heizungshauptschalter zeitbasiert an und aus schalten'
   domain: automation
   input:
-    entity_Heizungshauptschalter:
-      name: Entity für Heizungshauptschalter
+    entity_switch:
+      name: Heizungshauptschalter
       selector:
         entity:
+          domain: switch
     entity_schedule:
-      name: Schedule
+      name: Heizungsplan
       selector:
         entity:
+          domain: schedule
+    entity_condition:
+      name: Heizungsmodus
+      selector:
+        entity:
+          domain: input_select
 mode: restart
 max_exceeded: silent
 variables:
-  entity_Heizungshauptschalter: !input 'entity_Heizungshauptschalter'
+  entity_switch: !input 'entity_switch'
   entity_schedule: !input 'entity_schedule'
+  entity_condition: !input 'entity_condition'
 trigger:
   - platform: state
-    entity_id: !input 'entity_Heizungshauptschalter'
+    entity_id: !input 'entity_condition'
   - platform: state
     entity_id: !input 'entity_schedule'
 condition:
+  - condition: state
+    entity_id: !input 'entity_condition'
+    state: Zeitbasiert
   - condition: template
     value_template: '{{ states(entity_Heizungshauptschalter) != states(entity_schedule) }}'
 action:
-  - service: homeassistant.turn_{{ trigger.to_state.state }}
+  - service: homeassistant.turn_{{ states(entity_schedule) }}
     data:
-      entity_id: '{% if trigger.from_state.entity_id == entity_Heizungshauptschalter %} {{ entity_schedule }} {% else %} {{ entity_Heizungshauptschalter }} {% endif %}'
+      entity_id: '{{ entity_Heizungshauptschalter }}'
