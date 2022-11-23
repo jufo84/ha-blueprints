@@ -1,7 +1,7 @@
 blueprint:
   name: Automate Heizungshauptschalter
   description: |
-    ## Link On/Off State of Multiple Devices v1.0.1
+    ## Automate Heizungshauptschalter v1.0.1
     Sync Schedule with Heizungshauptschalter
 
     ### Requirements
