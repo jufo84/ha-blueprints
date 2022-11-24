@@ -34,8 +34,8 @@ condition:
     entity_id: !input 'entity_condition'
     state: Zeitbasiert
   - condition: template
-    value_template: '{{ states(entity_Heizungshauptschalter) != states(entity_schedule) }}'
+    value_template: '{{ states(entity_switch) != states(entity_schedule) }}'
 action:
   - service: homeassistant.turn_{{ states(entity_schedule) }}
     data:
-      entity_id: '{{ entity_Heizungshauptschalter }}'
+      entity_id: '{{ entity_switch }}'
