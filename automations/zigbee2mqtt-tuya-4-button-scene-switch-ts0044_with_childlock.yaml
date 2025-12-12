@@ -1,0 +1,254 @@
+blueprint:
+  name: Zigbee2MQTT 2.0 - Tuya 4-Button Scene Switch mit Childlock
+  description: Automate Tuya 4-Button Scene Switch with a child lock timer.
+  domain: automation
+  input:
+    switch:
+      name: Tuya 4-Button Scene Switch
+      description: Select the Tuya Switch
+      selector:
+        device:
+          integration: mqtt
+
+    childlock_timer:
+      name: Child Lock Timer
+      description: Timer entity used for child lock
+      selector:
+        entity:
+          domain: timer
+
+    childlock_action:
+      name: Child Lock Activation Button
+      description: Which button triggers the child lock
+      selector:
+        select:
+          options:
+            - label: Single Press - Button 1
+              value: 1_single
+            - label: Double Press - Button 1
+              value: 1_double
+            - label: Long Press - Button 1
+              value: 1_hold
+            - label: Single Press - Button 2
+              value: 2_single
+            - label: Double Press - Button 2
+              value: 2_double
+            - label: Long Press - Button 2
+              value: 2_hold
+            - label: Single Press - Button 3
+              value: 3_single
+            - label: Double Press - Button 3
+              value: 3_double
+            - label: Long Press - Button 3
+              value: 3_hold
+            - label: Single Press - Button 4
+              value: 4_single
+            - label: Double Press - Button 4
+              value: 4_double
+            - label: Long Press - Button 4
+              value: 4_hold
+    childlock_duration:
+      name: Childlock Disable Time
+      description: How long is the Childlock disabled
+      default:
+        hours: 0
+        minutes: 0
+        seconds: 15
+      selector:
+        duration: {}
+
+    # Button 1
+    button_1_short_press:
+      name: Single Press - Button 1
+      default: []
+      selector:
+        action: {}
+    button_1_double_press:
+      name: Double Press - Button 1
+      default: []
+      selector:
+        action: {}
+    button_1_long_press:
+      name: Long Press - Button 1
+      default: []
+      selector:
+        action: {}
+
+    # Button 2
+    button_2_short_press:
+      name: Single Press - Button 2
+      default: []
+      selector:
+        action: {}
+    button_2_double_press:
+      name: Double Press - Button 2
+      default: []
+      selector:
+        action: {}
+    button_2_long_press:
+      name: Long Press - Button 2
+      default: []
+      selector:
+        action: {}
+
+    # Button 3
+    button_3_short_press:
+      name: Single Press - Button 3
+      default: []
+      selector:
+        action: {}
+    button_3_double_press:
+      name: Double Press - Button 3
+      default: []
+      selector:
+        action: {}
+    button_3_long_press:
+      name: Long Press - Button 3
+      default: []
+      selector:
+        action: {}
+
+    # Button 4
+    button_4_short_press:
+      name: Single Press - Button 4
+      default: []
+      selector:
+        action: {}
+    button_4_double_press:
+      name: Double Press - Button 4
+      default: []
+      selector:
+        action: {}
+    button_4_long_press:
+      name: Long Press - Button 4
+      default: []
+      selector:
+        action: {}
+
+trigger:
+  # Button 1 Triggers
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 1_single
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 1_double
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 1_hold
+
+  # Button 2 Triggers
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 2_single
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 2_double
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 2_hold
+
+  # Button 3 Triggers
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 3_single
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 3_double
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 3_hold
+
+  # Button 4 Triggers
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 4_single
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 4_double
+  - platform: device
+    device_id: !input switch
+    domain: mqtt
+    type: action
+    subtype: 4_hold
+
+actions:
+  - variables:
+      command: '{{ trigger.payload }}'
+  - if:
+      - condition: state
+        entity_id: !input childlock_timer 
+        state: active
+    then:
+      - choose:
+          - conditions:
+              - '{{ command == ''1_single'' }}'
+            sequence: !input button_1_short_press
+          - conditions:
+              - '{{ command == ''1_double'' }}'
+            sequence: !input button_1_double_press
+          - conditions:
+              - '{{ command == ''1_hold'' }}'
+            sequence: !input button_1_long_press
+          - conditions:
+              - '{{ command == ''2_single'' }}'
+            sequence: !input button_2_short_press
+          - conditions:
+              - '{{ command == ''2_double'' }}'
+            sequence: !input button_2_double_press
+          - conditions:
+              - '{{ command == ''2_hold'' }}'
+            sequence: !input button_2_long_press
+          - conditions:
+              - '{{ command == ''3_single'' }}'
+            sequence: !input button_3_short_press
+          - conditions:
+              - '{{ command == ''3_double'' }}'
+            sequence: !input button_3_double_press
+          - conditions:
+              - '{{ command == ''3_hold'' }}'
+            sequence: !input button_3_long_press
+          - conditions:
+              - '{{ command == ''4_single'' }}'
+            sequence: !input button_4_short_press
+          - conditions:
+              - '{{ command == ''4_double'' }}'
+            sequence: !input button_4_double_press
+          - conditions:
+              - '{{ command == ''4_hold'' }}'
+            sequence: !input button_4_long_press
+    else:
+      - choose:
+          - conditions:
+              - '{{ command == (inputs.childlock_action) }}'
+            sequence:
+              - action: timer.start
+                metadata: {}
+                target:
+                  entity_id: !input childlock_timer
+                data:
+                  duration: !input childlock_duration
+mode: parallel
+max_exceeded: silent
