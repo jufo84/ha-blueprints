@@ -197,7 +197,7 @@ trigger:
 
 actions:
   - variables:
-      command: '{{ trigger.subtype }}'
+      command: '{{ trigger.payload }}'
       childlock_action: !input childlock_action
   - if:
       - condition: state
