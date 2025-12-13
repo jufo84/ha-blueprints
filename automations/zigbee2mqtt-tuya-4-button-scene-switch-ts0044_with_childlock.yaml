@@ -198,6 +198,7 @@ trigger:
 actions:
   - variables:
       command: '{{ trigger.payload }}'
+      childlock_action: !input childlock_action
   - if:
       - condition: state
         entity_id: !input childlock_timer 
@@ -243,7 +244,7 @@ actions:
     else:
       - choose:
           - conditions:
-              - '{{ command == (!input childlock_action) }}'
+              - '{{ command == childlock_action }}'
             sequence:
               - action: timer.start
                 metadata: {}
