@@ -127,120 +127,36 @@ blueprint:
         action: {}
 
 trigger:
-  # Button 1 Triggers
   - platform: device
     device_id: !input switch
     domain: mqtt
     type: action
-    subtype: 1_single
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 1_double
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 1_hold
-
-  # Button 2 Triggers
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 2_single
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 2_double
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 2_hold
-
-  # Button 3 Triggers
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 3_single
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 3_double
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 3_hold
-
-  # Button 4 Triggers
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 4_single
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 4_double
-  - platform: device
-    device_id: !input switch
-    domain: mqtt
-    type: action
-    subtype: 4_hold
 
 actions:
   - variables:
       command: '{{ trigger.payload }}'
       childlock_action: !input childlock_action
+      button_actions:
+        1_single: !input button_1_short_press
+        1_double: !input button_1_double_press
+        1_hold: !input button_1_long_press
+        2_single: !input button_2_short_press
+        2_double: !input button_2_double_press
+        2_hold: !input button_2_long_press
+        3_single: !input button_3_short_press
+        3_double: !input button_3_double_press
+        3_hold: !input button_3_long_press
+        4_single: !input button_4_short_press
+        4_double: !input button_4_double_press
+        4_hold: !input button_4_long_press
   - if:
       - condition: state
         entity_id: !input childlock_timer 
         state: active
     then:
-      - choose:
-          - conditions:
-              - '{{ command == ''1_single'' }}'
-            sequence: !input button_1_short_press
-          - conditions:
-              - '{{ command == ''1_double'' }}'
-            sequence: !input button_1_double_press
-          - conditions:
-              - '{{ command == ''1_hold'' }}'
-            sequence: !input button_1_long_press
-          - conditions:
-              - '{{ command == ''2_single'' }}'
-            sequence: !input button_2_short_press
-          - conditions:
-              - '{{ command == ''2_double'' }}'
-            sequence: !input button_2_double_press
-          - conditions:
-              - '{{ command == ''2_hold'' }}'
-            sequence: !input button_2_long_press
-          - conditions:
-              - '{{ command == ''3_single'' }}'
-            sequence: !input button_3_short_press
-          - conditions:
-              - '{{ command == ''3_double'' }}'
-            sequence: !input button_3_double_press
-          - conditions:
-              - '{{ command == ''3_hold'' }}'
-            sequence: !input button_3_long_press
-          - conditions:
-              - '{{ command == ''4_single'' }}'
-            sequence: !input button_4_short_press
-          - conditions:
-              - '{{ command == ''4_double'' }}'
-            sequence: !input button_4_double_press
-          - conditions:
-              - '{{ command == ''4_hold'' }}'
-            sequence: !input button_4_long_press
+      - if:
+          - '{{ command in button_actions }}'
+        then: '{{ button_actions[command] }}'
     else:
       - if:
           - '{{ command == childlock_action }}'
