@@ -134,7 +134,7 @@ trigger:
 
 actions:
   - variables:
-      command: '{{ trigger.payload }}'
+      command: '{{ trigger.subtype }}'
       childlock_action: !input childlock_action
       button_actions:
         1_single: !input button_1_short_press
