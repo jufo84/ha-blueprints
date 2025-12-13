@@ -11,6 +11,13 @@ blueprint:
         device:
           integration: mqtt
 
+    childlock_enable:
+      name: Enable Child Lock
+      description: Enable or disable the child lock feature
+      default: true
+      selector:
+        boolean: {}
+
     childlock_timer:
       name: Child Lock Timer
       description: Timer entity used for child lock
@@ -48,6 +55,7 @@ blueprint:
               value: 4_double
             - label: Long Press - Button 4
               value: 4_hold
+
     childlock_duration:
       name: Childlock Disable Time
       description: How long is the Childlock disabled
