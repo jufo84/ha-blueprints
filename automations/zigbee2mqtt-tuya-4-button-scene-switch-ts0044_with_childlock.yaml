@@ -217,7 +217,7 @@ actions:
         state: active
     then:
       - choose:
-          - conditions: '{{ command == "1_single" }}'
+          - conditions: '{{ command == ''1_single'' }}'
             sequence: !input button_1_short_press
           - conditions:
               - condition: template
