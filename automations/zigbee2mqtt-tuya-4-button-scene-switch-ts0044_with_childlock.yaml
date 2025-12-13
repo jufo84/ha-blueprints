@@ -157,7 +157,8 @@ actions:
       - if:
           - condition: template
             value_template: '{{ command in button_actions }}'
-        then: '{{ button_actions[command] }}'
+        then:
+          - sequence: '{{ button_actions[command] }}'
     else:
       - if:
           - condition: template
