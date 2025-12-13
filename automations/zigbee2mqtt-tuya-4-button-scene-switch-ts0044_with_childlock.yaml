@@ -2,6 +2,7 @@ blueprint:
   name: Zigbee2MQTT 2.0 - Tuya 4-Button Scene Switch mit Childlock
   description: Automate Tuya 4-Button Scene Switch with a child lock timer.
   domain: automation
+  source_url: https://raw.githubusercontent.com/jufo84/ha-blueprints/main/automations/zigbee2mqtt-tuya-4-button-scene-switch-ts0044_with_childlock.yaml
   input:
     switch:
       name: Tuya 4-Button Scene Switch
@@ -242,7 +243,7 @@ actions:
     else:
       - choose:
           - conditions:
-              - '{{ command == (inputs.childlock_action) }}'
+              - '{{ command == (!input childlock_action) }}'
             sequence:
               - action: timer.start
                 metadata: {}
