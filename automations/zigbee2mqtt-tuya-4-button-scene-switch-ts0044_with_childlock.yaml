@@ -219,49 +219,27 @@ actions:
       - choose:
           - conditions: '{{ command == ''1_single'' }}'
             sequence: !input button_1_short_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "1_double" }}'
+          - conditions: '{{ command == ''1_double'' }}'
             sequence: !input button_1_double_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "1_hold" }}'
+          - conditions: '{{ command == ''1_hold'' }}'
             sequence: !input button_1_long_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "2_single" }}'
+          - conditions: '{{ command == ''2_single'' }}'
             sequence: !input button_2_short_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "2_double" }}'
+          - conditions: '{{ command == ''2_double'' }}'
             sequence: !input button_2_double_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "2_hold" }}'
+          - conditions: '{{ command == ''2_hold'' }}'
             sequence: !input button_2_long_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "3_single" }}'
+          - conditions: '{{ command == ''3_single'' }}'
             sequence: !input button_3_short_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "3_double" }}'
+          - conditions: '{{ command == ''3_double'' }}'
             sequence: !input button_3_double_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "3_hold" }}'
+          - conditions: '{{ command == ''3_hold'' }}'
             sequence: !input button_3_long_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "4_single" }}'
+          - conditions: '{{ command == ''4_single'' }}'
             sequence: !input button_4_short_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "4_double" }}'
+          - conditions: '{{ command == ''4_double'' }}'
             sequence: !input button_4_double_press
-          - conditions:
-              - condition: template
-                value_template: '{{ command == "4_hold" }}'
+          - conditions: '{{ command == ''4_hold'' }}'
             sequence: !input button_4_long_press
     else:
       - if:
