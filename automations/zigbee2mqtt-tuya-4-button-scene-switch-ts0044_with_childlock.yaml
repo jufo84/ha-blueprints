@@ -25,6 +25,13 @@ blueprint:
         entity:
           domain: timer
 
+    childlock_enable:
+      name: Enable Child Lock
+      description: Enable or disable the child lock feature
+      default: true
+      selector:
+        boolean: {}
+
     childlock_action:
       name: Child Lock Activation Button
       description: Which button triggers the child lock
@@ -219,46 +226,58 @@ actions:
   - variables:
       command: '{{ trigger.id }}'
       childlock_action: !input childlock_action
+  # Check if childlock should activate timer
   - if:
+      - condition: template
+        value_template: !input childlock_enable
+      - condition: template
+        value_template: '{{ command == childlock_action }}'
       - condition: state
-        entity_id: !input childlock_timer 
-        state: active
+        entity_id: !input childlock_timer
+        state: idle
     then:
-      - choose:
-          - conditions: '{{ command == ''1_single'' }}'
-            sequence: !input button_1_short_press
-          - conditions: '{{ command == ''1_double'' }}'
-            sequence: !input button_1_double_press
-          - conditions: '{{ command == ''1_hold'' }}'
-            sequence: !input button_1_long_press
-          - conditions: '{{ command == ''2_single'' }}'
-            sequence: !input button_2_short_press
-          - conditions: '{{ command == ''2_double'' }}'
-            sequence: !input button_2_double_press
-          - conditions: '{{ command == ''2_hold'' }}'
-            sequence: !input button_2_long_press
-          - conditions: '{{ command == ''3_single'' }}'
-            sequence: !input button_3_short_press
-          - conditions: '{{ command == ''3_double'' }}'
-            sequence: !input button_3_double_press
-          - conditions: '{{ command == ''3_hold'' }}'
-            sequence: !input button_3_long_press
-          - conditions: '{{ command == ''4_single'' }}'
-            sequence: !input button_4_short_press
-          - conditions: '{{ command == ''4_double'' }}'
-            sequence: !input button_4_double_press
-          - conditions: '{{ command == ''4_hold'' }}'
-            sequence: !input button_4_long_press
-    else:
-      - if:
-          - condition: template
-            value_template: '{{ command == childlock_action }}'
-        then:
-          - action: timer.start
-            metadata: {}
-            target:
-              entity_id: !input childlock_timer
-            data:
-              duration: !input childlock_duration
+      - action: timer.start
+        metadata: {}
+        target:
+          entity_id: !input childlock_timer
+        data:
+          duration: !input childlock_duration
+  # Check if childlock should block buttons
+  - if:
+      - condition: template
+        value_template: !input childlock_enable
+      - condition: state
+        entity_id: !input childlock_timer
+        state: idle
+      - condition: template
+        value_template: '{{ command != childlock_action }}'
+    then:
+      - stop: "Child lock active - button blocked"
+  # Execute button actions
+  - choose:
+      - conditions: '{{ command == ''1_single'' }}'
+        sequence: !input button_1_short_press
+      - conditions: '{{ command == ''1_double'' }}'
+        sequence: !input button_1_double_press
+      - conditions: '{{ command == ''1_hold'' }}'
+        sequence: !input button_1_long_press
+      - conditions: '{{ command == ''2_single'' }}'
+        sequence: !input button_2_short_press
+      - conditions: '{{ command == ''2_double'' }}'
+        sequence: !input button_2_double_press
+      - conditions: '{{ command == ''2_hold'' }}'
+        sequence: !input button_2_long_press
+      - conditions: '{{ command == ''3_single'' }}'
+        sequence: !input button_3_short_press
+      - conditions: '{{ command == ''3_double'' }}'
+        sequence: !input button_3_double_press
+      - conditions: '{{ command == ''3_hold'' }}'
+        sequence: !input button_3_long_press
+      - conditions: '{{ command == ''4_single'' }}'
+        sequence: !input button_4_short_press
+      - conditions: '{{ command == ''4_double'' }}'
+        sequence: !input button_4_double_press
+      - conditions: '{{ command == ''4_hold'' }}'
+        sequence: !input button_4_long_press
 mode: parallel
 max_exceeded: silent
