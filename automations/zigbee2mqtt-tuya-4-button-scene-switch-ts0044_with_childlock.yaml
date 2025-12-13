@@ -156,7 +156,8 @@ actions:
     then:
       - if:
           - '{{ command in button_actions }}'
-        then: '{{ button_actions[command] }}'
+        then:
+          - '{{ button_actions[command] }}'
     else:
       - if:
           - '{{ command == childlock_action }}'
