@@ -155,12 +155,13 @@ actions:
         state: active
     then:
       - if:
-          - '{{ command in button_actions }}'
-        then:
-          - '{{ button_actions[command] }}'
+          - condition: template
+            value_template: '{{ command in button_actions }}'
+        then: '{{ button_actions[command] }}'
     else:
       - if:
-          - '{{ command == childlock_action }}'
+          - condition: template
+            value_template: '{{ command == childlock_action }}'
         then:
           - action: timer.start
             metadata: {}
